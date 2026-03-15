@@ -1,52 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi App Universal</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="script.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de APK</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>🌟 Bienvenido a tu App</h1>
-        <nav>
-            <ul>
-                <li><a href="#home">Inicio</a></li>
-                <li><a href="#features">Funcionalidades</a></li>
-                <li><a href="#contact">Contacto</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="container">
+        <h1>📦 Generador de APK</h1>
+        <p>Selecciona los archivos que quieres incluir en la app y genera tu APK</p>
 
-    <main>
-        <section id="home">
-            <h2>Inicio</h2>
-            <p>Esta es la base de tu app HTML5 lista para APK.</p>
-        </section>
+        <form id="upload-form">
+            <input type="file" id="files" multiple>
+            <button type="submit">Generar APK</button>
+        </form>
 
-        <section id="features">
-            <h2>Funcionalidades</h2>
-            <ul>
-                <li>Compatibilidad móvil y desktop</li>
-                <li>Interactividad con JavaScript</li>
-                <li>Diseño moderno y responsivo</li>
-            </ul>
-        </section>
+        <div id="status"></div>
+    </div>
 
-        <section id="contact">
-            <h2>Contacto</h2>
-            <form id="contact-form">
-                <input type="text" placeholder="Nombre" required>
-                <input type="email" placeholder="Correo" required>
-                <textarea placeholder="Mensaje" required></textarea>
-                <button type="submit">Enviar</button>
-            </form>
-        </section>
-    </main>
+    <script>
+        const form = document.getElementById('upload-form');
+        const status = document.getElementById('status');
 
-    <footer>
-        <p>© 2026 Khasam Goods. Todos los derechos reservados.</p>
-    </footer>
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const files = document.getElementById('files').files;
+            if (!files.length) return alert("Selecciona al menos un archivo");
+
+            status.innerText = "Procesando...";
+
+            // Aquí se llamaría a tu backend Python/Node que genera la APK
+            // Ejemplo: fetch('/generate', { method: 'POST', body: formData })
+        });
+    </script>
 </body>
 </html>
