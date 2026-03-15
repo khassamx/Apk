@@ -3,36 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Generador de APK</title>
+<title>GitHub → APK</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>📦 Generador de APK</h1>
-        <p>Selecciona los archivos que quieres incluir en la app y genera tu APK</p>
+<div class="container">
+    <h1>📦 Convierte tu GitHub en APK</h1>
+    <p>Pega el enlace de tu repositorio y genera tu APK directamente</p>
 
-        <form id="upload-form">
-            <input type="file" id="files" multiple>
-            <button type="submit">Generar APK</button>
-        </form>
+    <!-- Formulario para pegar link GitHub -->
+    <form id="github-form">
+        <input type="url" id="github-link" placeholder="https://github.com/usuario/repositorio" required>
+        <button type="submit">Generar APK</button>
+    </form>
 
-        <div id="status"></div>
-    </div>
+    <!-- También puedes permitir subir archivos -->
+    <p>O sube los archivos de tu proyecto:</p>
+    <form id="upload-form">
+        <input type="file" id="files" multiple>
+        <button type="submit">Generar APK</button>
+    </form>
 
-    <script>
-        const form = document.getElementById('upload-form');
+    <div id="status"></div>
+</div>
+
+<script>
+    // Manejo del link de GitHub
+    document.getElementById('github-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const link = document.getElementById('github-link').value;
+        if (!link) return alert("Pega un enlace de GitHub válido");
+
         const status = document.getElementById('status');
+        status.innerText = "Descargando repositorio y generando APK...";
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const files = document.getElementById('files').files;
-            if (!files.length) return alert("Selecciona al menos un archivo");
+        // Aquí llamas a tu backend Python/Node para procesar el GitHub
+        // Ejemplo:
+        // const res = await fetch('/generate_from_github', { method: 'POST', body: JSON.stringify({url: link}), headers: {'Content-Type': 'application/json'} });
+        // const data = await res.json();
+        // if (data.success) status.innerHTML = `APK lista: <a href="${data.apk}" download>Descargar</a>`;
+    });
 
-            status.innerText = "Procesando...";
+    // Manejo de archivos subidos
+    document.getElementById('upload-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const files = document.getElementById('files').files;
+        if (!files.length) return alert("Selecciona al menos un archivo");
 
-            // Aquí se llamaría a tu backend Python/Node que genera la APK
-            // Ejemplo: fetch('/generate', { method: 'POST', body: formData })
-        });
-    </script>
+        const formData = new FormData();
+        for (let f of files) formData.append('files', f);
+
+        const status = document.getElementById('status');
+        status.innerText = "Procesando archivos y generando APK...";
+
+        // Aquí llamas a tu backend Python/Node para procesar los archivos
+        // const res = await fetch('/generate', { method: 'POST', body: formData });
+        // const data = await res.json();
+        // if (data.success) status.innerHTML = `APK lista: <a href="${data.apk}" download>Descargar</a>`;
+    });
+</script>
 </body>
 </html>
