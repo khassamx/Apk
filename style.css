@@ -1,48 +1,99 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Body */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #000;
-  color: #fff;
-  margin: 0;
-  padding: 0;
+    background-color: #121212;
+    color: #ffffff;
+    line-height: 1.6;
 }
 
+/* Header */
 header {
-  background-color: #111;
-  text-align: center;
-  padding: 20px 0;
+    background-color: #1f1f1f;
+    padding: 20px;
+    text-align: center;
 }
 
-.products {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 20px;
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
 }
 
-.product {
-  background-color: #222;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  text-align: center;
-  width: 150px;
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 20px;
 }
 
-.product img {
-  width: 100%;
-  border-radius: 5px;
+nav a {
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: #ffcc00;
+}
+
+/* Sections */
+section {
+    padding: 50px 20px;
+    text-align: center;
+}
+
+section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #ffcc00;
+}
+
+/* Contact Form */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+input, textarea {
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+}
+
+input:focus, textarea:focus {
+    outline: 2px solid #ffcc00;
 }
 
 button {
-  background-color: #fff;
-  color: #000;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  margin-top: 5px;
+    padding: 12px;
+    background-color: #ffcc00;
+    color: #121212;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-  background-color: #f1c40f;
+    background-color: #ffaa00;
+}
+
+/* Footer */
+footer {
+    background-color: #1f1f1f;
+    padding: 20px;
+    text-align: center;
+    margin-top: 30px;
+    font-size: 0.9rem;
 }
