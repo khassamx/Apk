@@ -1,156 +1,55 @@
+#!/data/data/com.termux/files/usr/bin/python3
 import os
-import shutil
+import sys
 import subprocess
 
-# Configuración
-APP_NAME = "MallyWearApp"
-PACKAGE_NAME = "com.mallywear.app"
-OUTPUT_DIR = os.path.expanduser("~/storage/shared/Download")
-PROJECT_DIR = os.path.abspath("android_build")
+def run(cmd):
+    """Ejecuta un comando y muestra salida en tiempo real"""
+    process = subprocess.Popen(cmd, shell=True)
+    process.communicate()
 
-# Limpieza de proyecto anterior
-if os.path.exists(PROJECT_DIR):
-    shutil.rmtree(PROJECT_DIR)
+print("🔥 Bienvenido al Generador de APK desde GitHub 🔥")
+repo_url = input("Introduce la URL del repositorio GitHub: ").strip()
+app_name = input("Nombre para tu app (ej: MiApp): ").strip()
 
-os.makedirs(PROJECT_DIR)
+home = os.getenv("HOME")
+project_path = f"{home}/{app_name}"
 
-# Crear estructura mínima
-os.makedirs(os.path.join(PROJECT_DIR, "app/src/main/assets"), exist_ok=True)
-os.makedirs(os.path.join(PROJECT_DIR, "app/src/main/java", *PACKAGE_NAME.split(".")), exist_ok=True)
-os.makedirs(os.path.join(PROJECT_DIR, "app/src/main/res/layout"), exist_ok=True)
-os.makedirs(os.path.join(PROJECT_DIR, "app/src/main/res/values"), exist_ok=True)
+# 1️⃣ Clonar repo
+if os.path.exists(project_path):
+    print(f"❌ La carpeta {app_name} ya existe, borrando...")
+    run(f"rm -rf {project_path}")
 
-# Copiar archivos web
-for file in ["index.html", "style.css", "script.js"]:
-    if os.path.exists(file):
-        shutil.copy(file, os.path.join(PROJECT_DIR, "app/src/main/assets"))
-    else:
-        print(f"⚠️  {file} no encontrado, saltando...")
+print(f"📂 Clonando {repo_url} en {project_path}...")
+run(f"git clone {repo_url} {project_path}")
 
-# Crear MainActivity.java
-main_activity_path = os.path.join(PROJECT_DIR, "app/src/main/java", *PACKAGE_NAME.split("."), "MainActivity.java")
-with open(main_activity_path, "w") as f:
-    f.write(f"""
-package {PACKAGE_NAME};
+# 2️⃣ Crear proyecto Cordova
+os.chdir(home)
+if os.path.exists(f"{home}/{app_name}_cordova"):
+    run(f"rm -rf {home}/{app_name}_cordova")
+print(f"⚡ Creando proyecto Cordova {app_name}_cordova...")
+run(f"cordova create {app_name}_cordova")
+cordova_path = f"{home}/{app_name}_cordova"
+os.chdir(cordova_path)
 
-import android.os.Bundle;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import androidx.appcompat.app.AppCompatActivity;
+# 3️⃣ Añadir plataforma Android
+print("📱 Añadiendo plataforma Android...")
+run("cordova platform add android")
 
-public class MainActivity extends AppCompatActivity {{
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {{
-        super.onCreate(savedInstanceState);
-        WebView webView = new WebView(this);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("file:///android_asset/index.html");
-        setContentView(webView);
-    }}
-}}
-""")
+# 4️⃣ Copiar archivos del repo al www/
+print("📁 Copiando archivos del repo a Cordova www/...")
+run(f"cp -r {project_path}/* www/")
 
-# Crear AndroidManifest.xml
-manifest_path = os.path.join(PROJECT_DIR, "app/src/main/AndroidManifest.xml")
-with open(manifest_path, "w") as f:
-    f.write(f"""
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="{PACKAGE_NAME}">
-    <application android:allowBackup="true"
-        android:label="{APP_NAME}"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round">
-        <activity android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-    </application>
-</manifest>
-""")
+# 5️⃣ Construir APK
+print("🛠️ Construyendo APK...")
+run("cordova build android")
 
-# Crear build.gradle (app)
-gradle_app_path = os.path.join(PROJECT_DIR, "app/build.gradle")
-os.makedirs(os.path.dirname(gradle_app_path), exist_ok=True)
-with open(gradle_app_path, "w") as f:
-    f.write(f"""
-plugins {{
-    id 'com.android.application'
-}}
+# 6️⃣ Mover APK a Descargas
+apk_src = f"{cordova_path}/platforms/android/app/build/outputs/apk/debug/app-debug.apk"
+apk_dest = f"{home}/storage/shared/Download/{app_name}.apk"
 
-android {{
-    compileSdk 33
-
-    defaultConfig {{
-        applicationId "{PACKAGE_NAME}"
-        minSdk 21
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
-    }}
-
-    buildTypes {{
-        release {{
-            minifyEnabled false
-        }}
-    }}
-}}
-
-dependencies {{
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-}}
-""")
-
-# Crear build.gradle (root)
-gradle_root_path = os.path.join(PROJECT_DIR, "build.gradle")
-with open(gradle_root_path, "w") as f:
-    f.write("""
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.1'
-    }
-}
-
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-""")
-
-# Crear settings.gradle
-with open(os.path.join(PROJECT_DIR, "settings.gradle"), "w") as f:
-    f.write("include ':app'\n")
-
-# Crear gradlew simple (llamará a gradle local)
-with open(os.path.join(PROJECT_DIR, "gradlew"), "w") as f:
-    f.write("""#!/bin/sh
-gradle "$@"
-""")
-os.chmod(os.path.join(PROJECT_DIR, "gradlew"), 0o755)
-
-# Iniciar compilación
-print("🚀 Construyendo APK... Esto puede tardar unos minutos.")
-os.chdir(PROJECT_DIR)
-
-try:
-    subprocess.run(["gradle", "assembleDebug"], check=True)
-except subprocess.CalledProcessError:
-    print("❌ Error al compilar APK. Revisa los logs de Gradle.")
-    exit(1)
-
-# Mover APK a Descargas
-apk_path = os.path.join(PROJECT_DIR, "app/build/outputs/apk/debug/app-debug.apk")
-if os.path.exists(apk_path):
-    shutil.copy(apk_path, OUTPUT_DIR)
-    print(f"✅ APK generado: {os.path.join(OUTPUT_DIR, 'app-debug.apk')}")
+if os.path.exists(apk_src):
+    run(f"cp {apk_src} {apk_dest}")
+    print(f"✅ APK generada y guardada en: {apk_dest}")
 else:
-    print("❌ No se encontró el APK generado.")
+    print("❌ No se pudo generar la APK, revisa errores en la compilación.")
