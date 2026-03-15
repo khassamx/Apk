@@ -21,7 +21,7 @@ body {
     border-radius: 12px;
     text-align: center;
     width: 90%;
-    max-width: 400px;
+    max-width: 450px;
     box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
@@ -31,12 +31,18 @@ h1 {
 }
 
 p {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-input[type="file"] {
+input[type="url"], input[type="file"] {
     display: block;
     margin: 0 auto 20px auto;
+    width: 80%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #333;
+    background-color: #2a2a2a;
+    color: #fff;
 }
 
 button {
@@ -48,6 +54,7 @@ button {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-bottom: 20px;
 }
 
 button:hover {
@@ -57,4 +64,5 @@ button:hover {
 #status {
     margin-top: 20px;
     font-weight: bold;
+    color: #00ffcc;
 }
