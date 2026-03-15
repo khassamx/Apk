@@ -1,36 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mally Wear App</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi App Universal</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="script.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Mally Wear</h1>
-    <p>¡Tu tienda virtual en tu app!</p>
-  </header>
+    <header>
+        <h1>🌟 Bienvenido a tu App</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#features">Funcionalidades</a></li>
+                <li><a href="#contact">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <main>
-    <section class="products">
-      <div class="product">
-        <img src="assets/cap1.png" alt="Cap 1">
-        <h2>Gorra Negra</h2>
-        <button onclick="addToCart('Gorra Negra')">Agregar al carrito</button>
-      </div>
-      <div class="product">
-        <img src="assets/cap2.png" alt="Cap 2">
-        <h2>Gorra Blanca</h2>
-        <button onclick="addToCart('Gorra Blanca')">Agregar al carrito</button>
-      </div>
-    </section>
-  </main>
+    <main>
+        <section id="home">
+            <h2>Inicio</h2>
+            <p>Esta es la base de tu app HTML5 lista para APK.</p>
+        </section>
 
-  <footer>
-    <p>Contactanos: WhatsApp / Instagram</p>
-  </footer>
+        <section id="features">
+            <h2>Funcionalidades</h2>
+            <ul>
+                <li>Compatibilidad móvil y desktop</li>
+                <li>Interactividad con JavaScript</li>
+                <li>Diseño moderno y responsivo</li>
+            </ul>
+        </section>
 
-  <script src="script.js"></script>
+        <section id="contact">
+            <h2>Contacto</h2>
+            <form id="contact-form">
+                <input type="text" placeholder="Nombre" required>
+                <input type="email" placeholder="Correo" required>
+                <textarea placeholder="Mensaje" required></textarea>
+                <button type="submit">Enviar</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Khasam Goods. Todos los derechos reservados.</p>
+    </footer>
 </body>
 </html>
