@@ -1,5 +1,5 @@
 __pycache__/
 *.pyc
 *.apk
+android_build/
 node_modules/
-jvm/
