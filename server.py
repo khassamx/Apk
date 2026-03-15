@@ -1,8 +1,19 @@
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, send_from_directory
 import os, subprocess, uuid
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    # Esto sirve tu HTML principal
+    return send_from_directory('.', 'index.html')
+
+@app.route('/style.css')
+def style():
+    # Sirve el CSS
+    return send_from_directory('.', 'style.css')
+
+# --- Rutas que ya tienes ---
 @app.route('/generate_from_github', methods=['POST'])
 def generate_github():
     data = request.json
@@ -23,6 +34,11 @@ def generate_github():
         return {'success': False, 'error': 'APK no generado'}, 500
 
     return send_file(apk_path, as_attachment=True)
+
+@app.route('/generate', methods=['POST'])
+def generate_upload():
+    # Aquí recibirías archivos subidos y los procesas igual que GitHub
+    return {'success': False, 'error': 'Función en desarrollo'}, 501
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
